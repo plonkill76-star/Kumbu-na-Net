@@ -1,0 +1,8 @@
+{
+  "name": "Kumbu na Net - Ganhe Assistindo",
+  "description": "Plataforma angolana para ganhar Kwanzas assistindo anúncios do Google, YouTube e TikTok, com pagamentos via MULTICAIXA EXPRESS.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
