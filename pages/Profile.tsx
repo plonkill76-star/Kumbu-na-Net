@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { User } from '../types';
 
 interface ProfileProps {
@@ -11,6 +11,7 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser }) => {
   const [name, setName] = useState(user.name);
   const [phone, setPhone] = useState(user.multicaixaNumber);
   const [isSaving, setIsSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,27 +31,65 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser }) => {
     }, 1000);
   };
 
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert("A imagem é muito grande. Escolha uma foto com menos de 2MB.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        onUpdateUser({
+          ...user,
+          avatar: base64String
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
       <h1 className="text-4xl font-extrabold mb-12">Meu Perfil</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
         <div className="md:col-span-1 text-center">
-          <div className="relative inline-block mb-6 group">
+          <div 
+            className="relative inline-block mb-6 group cursor-pointer"
+            onClick={handleAvatarClick}
+          >
             <img 
               src={user.avatar} 
               alt="Avatar" 
-              className="w-40 h-40 rounded-[40px] border-4 border-amber-500 object-cover p-1 shadow-2xl" 
+              className="w-40 h-40 rounded-[40px] border-4 border-amber-500 object-cover p-1 shadow-2xl transition-transform group-hover:scale-105" 
             />
-            <div className="absolute inset-0 bg-slate-900/40 rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
-               <i className="fa-solid fa-camera text-white text-2xl"></i>
+            <div className="absolute inset-0 bg-slate-900/40 rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+               <div className="bg-amber-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg">
+                 <i className="fa-solid fa-camera text-slate-900 text-xl"></i>
+               </div>
             </div>
+            {/* Hidden File Input */}
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              className="hidden" 
+              accept="image/*" 
+              onChange={handleFileChange}
+            />
           </div>
           <h2 className="text-xl font-bold">{user.name}</h2>
           <p className="text-slate-400 text-sm mb-4">{user.email}</p>
           <div className="bg-green-500/10 text-green-500 px-4 py-1 rounded-full text-xs font-bold inline-block border border-green-500/20">
             Conta Verificada
           </div>
+          <p className="mt-4 text-[10px] text-slate-500 uppercase tracking-widest">Clique na foto para alterar</p>
         </div>
 
         <div className="md:col-span-2 glass p-8 rounded-[32px] border-slate-800">

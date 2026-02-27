@@ -32,15 +32,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <div className="absolute top-0 right-0 p-8 opacity-10">
           <i className="fa-solid fa-rss text-9xl -rotate-45"></i>
         </div>
-        <div className="relative z-10">
+        <Link to="/tasks" className="relative z-10 block group/balance">
           <div className="flex justify-between items-start mb-2">
             <span className="text-white/70 text-sm font-medium uppercase tracking-widest">Saldo Disponível</span>
-            <i className="fa-solid fa-brazilian-real-sign text-white/30 text-xl"></i>
+            <i className="fa-solid fa-brazilian-real-sign text-white/30 text-xl group-hover/balance:text-white transition-colors"></i>
           </div>
-          <p className="text-5xl font-black text-white tracking-tighter">
+          <p className="text-5xl font-black text-white tracking-tighter group-hover/balance:scale-[1.02] transition-transform origin-left">
             {user.balance.toLocaleString('pt-AO')} <span className="text-2xl opacity-80">Kz</span>
           </p>
-        </div>
+        </Link>
         <div className="relative z-10 flex justify-between items-end">
           <div className="space-y-1">
             <p className="text-white/60 text-[10px] uppercase">Titular da Conta</p>
